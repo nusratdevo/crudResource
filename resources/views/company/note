@@ -1,0 +1,179 @@
+@extends('layouts.master')
+
+@section('content')
+
+{{-- Add Modal --}}
+<div class="modal fade" id="AddStudentModal" tabindex="-1" aria-labelledby="AddStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AddStudentModalLabel">Add Company</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <ul id="save_msgList"></ul>
+
+                <div class="form-group mb-3">
+                    <label for="">Company Name</label>
+                    <input type="text" required class="name form-control" placeholder="Please Enter Company Name">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="">Email</label>
+                    <input type="email" required class="email form-control" placeholder="Plese Enter Company Email">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="">Logo</label>
+                    <input type="file" required class="file form-control">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="">Website</label>
+                    <input type="text" required class="website form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary add_company">Save</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+{{-- Edit Modal --}}
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit & Update Compay Data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <ul id="update_msgList"></ul>
+
+                <input type="hidden" id="id" />
+
+                <div class="form-group mb-3">
+                    <label for="">Company Name</label>
+                    <input type="text" required class="name form-control" placeholder="Please Enter Company Name">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="">Email</label>
+                    <input type="email" required class="email form-control" placeholder="Plese Enter Company Email">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="">Logo</label>
+                    <input type="file" required class="file form-control">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="">Website</label>
+                    <input type="text" required class="website form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary update_student">Update</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+{{-- Edn- Edit Modal --}}
+
+
+{{-- Delete Modal --}}
+<div class="modal fade" id="DeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete Company Data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h4>Confirm to Delete Data ?</h4>
+                <input type="hidden" id="deleteing_id">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary delete_student">Yes Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- End - Delete Modal --}}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-12">
+
+            <div id="success_message"></div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+						<div><h1>  Company List
+							<a href="{{route('employee.index')}}" type="button" class="btn btn-primary float-end" 
+                            >Employee List</a></h1>
+						</div>
+                      
+                        <button type="button" class="btn btn-success float-start" data-bs-toggle="modal"
+                            data-bs-target="#AddStudentModal">Add Company</button>
+							{{-- //logout --}}
+							<form method="POST" action="{{ route('logout') }}">
+								@csrf
+	
+								<x-dropdown-link :href="route('logout')"
+										onclick="event.preventDefault();
+													this.closest('form').submit();">
+									{{ __('Log Out') }}
+								</x-dropdown-link>
+							</form>
+							
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+								<th>Website</th>
+                                <th>Logo</th>
+                                <th>Edit || Delete</th>
+                            </tr>
+                        </thead>
+						<tbody>
+                            @foreach($companies as $data)
+                            <tr>
+                            <td>{{$data->id}}</td>
+                            <td>{{$data->name}}</td>
+                            <td>{{$data->email}}</td>
+							<td>{{$data->website}}</td>
+                            <td>
+                              @if(!empty($data->image))
+                              <img src="{{ asset('/image/'.$data->image) }}" style="width:100px;">
+                              @endif
+                            </td>
+                               <td>
+                               <a href="{{route('comapny.edit')}}" class="btn btn-add btn-sm"><i class="fa fa-pencil"></i></button>
+                               <a href="{{route('company.delete')}}" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> </button>
+                               </td>
+                            </tr>
+                            @endforeach
+                         </tbody>
+                    </table>
+					
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@endsection
+
+@section('scripts')
+
